@@ -27,4 +27,23 @@ android {
     }
 }
 
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation Libs.kotlin_stdlib
+    implementation Libs.koin
+    implementation Libs.koin_view_model
+
+    implementation Libs.androidX_coreKtx
+    implementation Libs.androidX_appCompat
+    implementation Libs.androidX_constraint_layout
+
+    implementation Libs.material_components
+
+    implementation Libs.androidX_lifecycle
+    implementation Libs.androidX_lifecycle_ktx
+    implementation Libs.androidX_lifecycle_vmx
+}
+
+
 
