@@ -2,4 +2,5 @@
 <resources>
     <dimen name="match_constraint">0dp</dimen>
     <dimen name="bottomBarHeight">56dp</dimen>
+    <dimen name="default_margin">8dp</dimen>
 </resources>

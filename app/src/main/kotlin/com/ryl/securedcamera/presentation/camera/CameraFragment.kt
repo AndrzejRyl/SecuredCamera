@@ -27,6 +27,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
             lensPosition = back(),
             cameraErrorCallback = { viewModel.onCameraError(it) }
         )
+        setupListeners()
         setupObservers()
     }
 
@@ -40,10 +41,15 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         cameraEngine.stop()
     }
 
+    private fun setupListeners() {
+        cameraScreenChangeCameraButton.setOnClickListener { viewModel.onChangeCameraClicked() }
+        cameraScreenTakePictureButton.setOnClickListener { viewModel.onTakePictureClicked() }
+    }
+
     private fun setupObservers() {
         viewModel.run {
-            leanPosition.observe(viewLifecycleOwner) {
-                cameraEngine.switchTo(it, cameraConfiguration)
+            lensPosition.observe(viewLifecycleOwner) {
+                cameraEngine.switchTo(it.selector, cameraConfiguration)
             }
         }
     }
