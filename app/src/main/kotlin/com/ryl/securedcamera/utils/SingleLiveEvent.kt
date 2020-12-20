@@ -1,4 +1,4 @@
-package com.moodreaders.bookdeck.mvi.utils
+package com.ryl.securedcamera.utils
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner

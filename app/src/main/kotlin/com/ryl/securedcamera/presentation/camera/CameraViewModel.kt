@@ -1,19 +1,24 @@
 package com.ryl.securedcamera.presentation.camera
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
-import com.moodreaders.bookdeck.mvi.utils.SingleLiveEvent
+import androidx.lifecycle.*
+import com.ryl.securedcamera.data.images.ImagesRepository
 import com.ryl.securedcamera.presentation.camera.model.CameraScreenEffect
 import com.ryl.securedcamera.presentation.camera.router.CameraScreenRouter
+import com.ryl.securedcamera.utils.SingleLiveEvent
+import com.ryl.securedcamera.utils.dispatchers.DefaultDispatcherProvider
+import com.ryl.securedcamera.utils.dispatchers.DispatcherProvider
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.selector.LensPositionSelector
 import io.fotoapparat.selector.back
 import io.fotoapparat.selector.front
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
 import java.io.File
 
-class CameraViewModel(private val filesDir: File) : ViewModel() {
+class CameraViewModel(
+    private val imagesRepository: ImagesRepository,
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+) : ViewModel() {
 
     private val _lensPosition = MutableLiveData<LensPosition>(LensPosition.BACK)
     val lensPosition: LiveData<LensPosition> = _lensPosition.distinctUntilChanged()
@@ -24,10 +29,13 @@ class CameraViewModel(private val filesDir: File) : ViewModel() {
     private val _effects = SingleLiveEvent<CameraScreenEffect>()
     val effects = _effects
 
+    private val errorHandler = CoroutineExceptionHandler { _, throwable ->
+        _errors.value = throwable.message
+    }
+
     fun onScreenStart() {
-        val galleryFolder = File(filesDir, GALLERY_PATH)
-        if (!galleryFolder.exists()) {
-            galleryFolder.mkdir()
+        viewModelScope.launch(dispatcherProvider.main + errorHandler) {
+            imagesRepository.createGalleryFolderIfNecessary()
         }
     }
 
@@ -43,17 +51,15 @@ class CameraViewModel(private val filesDir: File) : ViewModel() {
     }
 
     fun onTakePictureClicked() {
-        _effects.value = CameraScreenEffect.TakePicture(generatePictureFile())
+        viewModelScope.launch(dispatcherProvider.main + errorHandler) {
+            _effects.value = CameraScreenEffect.TakePicture(generatePictureFile())
+        }
     }
 
-    private fun generatePictureFile(): File =
-        File(filesDir, GALLERY_PATH + "/" + System.currentTimeMillis() + ".jpg")
+    private suspend fun generatePictureFile(): File = imagesRepository.generateNewImageFile()
 
     fun onPictureTaken(router: CameraScreenRouter) = router.navigateToGallery()
 
-    companion object {
-        private const val GALLERY_PATH = "secure_gallery"
-    }
 }
 
 enum class LensPosition(val selector: LensPositionSelector) {
