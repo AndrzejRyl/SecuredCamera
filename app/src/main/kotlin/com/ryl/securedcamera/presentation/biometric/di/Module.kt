@@ -5,5 +5,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val biometricCheckModule = module {
-    viewModel { BiometricCheckViewModel() }
+    viewModel {
+        BiometricCheckViewModel(
+            fileEncryptor = get()
+        )
+    }
 }

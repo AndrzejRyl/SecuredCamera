@@ -10,15 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.ryl.securedcamera.R
+import com.ryl.securedcamera.data.crypto.CipherProvider
 import com.ryl.securedcamera.presentation.biometric.router.BiometricCheckRouter
 import com.ryl.securedcamera.presentation.biometric.router.BiometricCheckRouterImpl
 import com.ryl.securedcamera.utils.biometricCallbacks
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.crypto.Cipher
 
 class BiometricCheckFragment : Fragment(R.layout.fragment_biometric) {
 
     private val viewModel by viewModel<BiometricCheckViewModel>()
     private val router: BiometricCheckRouter by lazy { BiometricCheckRouterImpl(findNavController()) }
+    private val cipherProvider: CipherProvider by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +44,10 @@ class BiometricCheckFragment : Fragment(R.layout.fragment_biometric) {
             .setNegativeButtonText(getString(R.string.biometric_dialog_cancel))
             .build()
 
-        biometricPrompt.authenticate(promptInfo)
+        biometricPrompt.authenticate(
+            promptInfo,
+            BiometricPrompt.CryptoObject(cipherProvider.provideInitializedCipher())
+        )
     }
 
     private fun setupObservers() {
