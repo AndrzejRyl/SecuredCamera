@@ -7,6 +7,7 @@ object Versions {
     const val googlePlayServices = "4.3.3"
     const val kotlin = "1.3.70"
     const val kotlinCoroutines = "1.3.3"
+    const val navigation = "2.3.0"
 
     const val appCompat = "1.1.0"
     const val coreKtx = "1.1.0"
@@ -21,6 +22,7 @@ object Versions {
 object Libs {
     const val gradle_classpath = "com.android.tools.build:gradle:${Versions.gradle}"
     const val google_services_classpath = "com.google.gms:google-services:${Versions.googlePlayServices}"
+    const val navigation_classpath = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
 
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     const val kotlin_classpath = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
@@ -36,6 +38,9 @@ object Libs {
     const val androidX_constraint_layout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
 
     const val material_components = "com.google.android.material:material:${Versions.materialComponents}"
+
+    const val navigation_fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+    const val navigation_ktx = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
 
     const val koin = "org.koin:koin-android:${Versions.koin}"
     const val koin_view_model = "org.koin:koin-androidx-viewmodel:${Versions.koin}"

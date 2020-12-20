@@ -8,6 +8,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SecuredCamera" />
+        android:theme="@style/Theme.SecuredCamera">
+
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SecuredCamera">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 
 </manifest>
