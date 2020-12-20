@@ -18,6 +18,7 @@ object Versions {
     const val koin = "2.1.5"
 
     const val fotoApparat = "2.7.0"
+    const val permissions = "4.8.0"
 }
 
 @Suppress("unused")
@@ -48,4 +49,7 @@ object Libs {
     const val koin_view_model = "org.koin:koin-androidx-viewmodel:${Versions.koin}"
 
     const val fotoApparat = "io.fotoapparat:fotoapparat:${Versions.fotoApparat}"
+
+    const val permissions = "org.permissionsdispatcher:permissionsdispatcher:${Versions.permissions}"
+    const val permissionAnnotations = "org.permissionsdispatcher:permissionsdispatcher-processor:${Versions.permissions}"
 }

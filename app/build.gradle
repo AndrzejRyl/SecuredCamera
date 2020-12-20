@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -48,6 +49,9 @@ dependencies {
     implementation Libs.androidX_lifecycle_vmx
 
     implementation Libs.fotoApparat
+
+    implementation Libs.permissions
+    kapt Libs.permissionAnnotations
 }
 
 
