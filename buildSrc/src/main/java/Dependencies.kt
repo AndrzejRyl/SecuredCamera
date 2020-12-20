@@ -19,6 +19,8 @@ object Versions {
 
     const val fotoApparat = "2.7.0"
     const val permissions = "4.8.0"
+
+    const val biometric = "1.2.0-alpha01"
 }
 
 @Suppress("unused")
@@ -52,4 +54,6 @@ object Libs {
 
     const val permissions = "org.permissionsdispatcher:permissionsdispatcher:${Versions.permissions}"
     const val permissionAnnotations = "org.permissionsdispatcher:permissionsdispatcher-processor:${Versions.permissions}"
+
+    const val biometric = "androidx.biometric:biometric:${Versions.biometric}"
 }

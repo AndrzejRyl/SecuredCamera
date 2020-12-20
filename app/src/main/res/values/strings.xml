@@ -3,4 +3,7 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="camera_permission_denied">You cannot use this app without this permission</string>
+    <string name="biometric_dialog_title">Biometric check</string>
+    <string name="biometric_dialog_subtitle">Please use your fingerprint to unlock this app</string>
+    <string name="biometric_dialog_cancel">I don\'t want to authenticate</string>
 </resources>

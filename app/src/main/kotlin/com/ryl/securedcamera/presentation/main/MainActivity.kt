@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     @NeedsPermission(Manifest.permission.CAMERA)
     fun setViews() {
         mainScreenBottomNavigationView.setupWithNavController(navController)
-        navController.navigate(R.id.cameraFragment)
     }
 
     // TODO Change this to proper dialog. Toast is disappearing when system dialog appears
