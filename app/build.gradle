@@ -46,6 +46,8 @@ dependencies {
     implementation Libs.androidX_lifecycle
     implementation Libs.androidX_lifecycle_ktx
     implementation Libs.androidX_lifecycle_vmx
+
+    implementation Libs.fotoApparat
 }
 
 

@@ -16,6 +16,8 @@ object Versions {
     const val materialComponents = "1.3.0-alpha03"
 
     const val koin = "2.1.5"
+
+    const val fotoApparat = "2.7.0"
 }
 
 @Suppress("unused")
@@ -44,4 +46,6 @@ object Libs {
 
     const val koin = "org.koin:koin-android:${Versions.koin}"
     const val koin_view_model = "org.koin:koin-androidx-viewmodel:${Versions.koin}"
+
+    const val fotoApparat = "io.fotoapparat:fotoapparat:${Versions.fotoApparat}"
 }
