@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         setViewsWithPermissionCheck()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Do not allow possible access without authorization
+        navController.navigate(R.id.biometricFragment)
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
