@@ -28,7 +28,11 @@ class ImageEncryptorImpl(
             if (encryptCipher != null) {
                 encryptCipher = cipherProvider.provideInitializedEncryptCipher()
             }
-            val output = CipherOutputStream(FileOutputStream(getTempFile(file)), encryptCipher)
+            val fileOutputStream = FileOutputStream(getTempFile(file))
+            // First prepend IV
+            fileOutputStream.write(encryptCipher?.iv)
+
+            val output = CipherOutputStream(fileOutputStream, encryptCipher)
 
             val data = ByteArray(1024)
             var total: Long = 0
@@ -58,8 +62,13 @@ class ImageEncryptorImpl(
     override fun decryptImageFile(file: File): Bitmap? {
         return try {
             encryptCipher?.let {
-                val decryptCipher = cipherProvider.provideInitializedDecryptCipher(it.iv)
-                val input: InputStream = CipherInputStream(file.inputStream(), decryptCipher)
+                // Retrieve IV
+                val iv = ByteArray(12)
+                val fileInputStream = file.inputStream()
+                fileInputStream.read(iv)
+
+                val decryptCipher = cipherProvider.provideInitializedDecryptCipher(iv)
+                val input: InputStream = CipherInputStream(fileInputStream, decryptCipher)
 
                 BitmapFactory.decodeStream(input)
             }
