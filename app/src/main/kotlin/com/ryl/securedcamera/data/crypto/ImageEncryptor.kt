@@ -25,6 +25,9 @@ class ImageEncryptorImpl(
     override fun encryptImageFile(file: File) {
         try {
             val input: InputStream = BufferedInputStream(file.inputStream())
+            if (encryptCipher != null) {
+                encryptCipher = cipherProvider.provideInitializedEncryptCipher()
+            }
             val output = CipherOutputStream(FileOutputStream(getTempFile(file)), encryptCipher)
 
             val data = ByteArray(1024)
