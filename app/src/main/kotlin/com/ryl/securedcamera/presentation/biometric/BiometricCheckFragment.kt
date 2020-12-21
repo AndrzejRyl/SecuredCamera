@@ -3,7 +3,6 @@ package com.ryl.securedcamera.presentation.biometric
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -16,7 +15,6 @@ import com.ryl.securedcamera.presentation.biometric.router.BiometricCheckRouterI
 import com.ryl.securedcamera.utils.biometricCallbacks
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import javax.crypto.Cipher
 
 class BiometricCheckFragment : Fragment(R.layout.fragment_biometric) {
 
@@ -46,7 +44,7 @@ class BiometricCheckFragment : Fragment(R.layout.fragment_biometric) {
 
         biometricPrompt.authenticate(
             promptInfo,
-            BiometricPrompt.CryptoObject(cipherProvider.provideInitializedCipher())
+            BiometricPrompt.CryptoObject(cipherProvider.provideInitializedEncryptCipher())
         )
     }
 

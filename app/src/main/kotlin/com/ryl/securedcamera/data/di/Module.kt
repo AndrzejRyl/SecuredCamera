@@ -22,7 +22,8 @@ val dataModule = module {
 
     single<ImageEncryptor> {
         ImageEncryptorImpl(
-            cacheDestination = androidContext().cacheDir
+            cacheDestination = androidContext().cacheDir,
+            cipherProvider = get()
         )
     }
 }

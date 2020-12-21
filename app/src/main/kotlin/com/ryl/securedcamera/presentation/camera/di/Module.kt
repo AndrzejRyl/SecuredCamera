@@ -8,7 +8,8 @@ val cameraScreenModule = module {
 
     viewModel {
         CameraViewModel(
-            imagesRepository = get()
+            imagesRepository = get(),
+            imageEncryptor = get()
         )
     }
 }

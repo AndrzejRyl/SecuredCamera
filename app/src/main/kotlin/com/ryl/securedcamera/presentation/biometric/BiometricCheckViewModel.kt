@@ -24,8 +24,11 @@ class BiometricCheckViewModel(
     fun onAuthSuccess(
         authenticationResult: BiometricPrompt.AuthenticationResult,
         router: BiometricCheckRouter
-    ) = router.navigateToCameraScreen().also {
-        imageEncryptor.cipher = authenticationResult.cryptoObject?.cipher
+    ) {
+        authenticationResult.cryptoObject?.cipher?.let {
+            imageEncryptor.encryptCipher = it
+            router.navigateToCameraScreen()
+        } ?: onError()
     }
 
     fun onAuthFailure() {

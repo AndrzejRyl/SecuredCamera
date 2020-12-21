@@ -1,6 +1,7 @@
 package com.ryl.securedcamera.presentation.camera
 
 import androidx.lifecycle.*
+import com.ryl.securedcamera.data.crypto.ImageEncryptor
 import com.ryl.securedcamera.data.images.ImagesRepository
 import com.ryl.securedcamera.presentation.camera.model.CameraScreenEffect
 import com.ryl.securedcamera.presentation.camera.router.CameraScreenRouter
@@ -17,6 +18,7 @@ import java.io.File
 
 class CameraViewModel(
     private val imagesRepository: ImagesRepository,
+    private val imageEncryptor: ImageEncryptor,
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 ) : ViewModel() {
 
@@ -58,7 +60,10 @@ class CameraViewModel(
 
     private suspend fun generatePictureFile(): File = imagesRepository.generateNewImageFile()
 
-    fun onPictureTaken(router: CameraScreenRouter) = router.navigateToGallery()
+    fun onPictureTaken(file: File, router: CameraScreenRouter) {
+        imageEncryptor.encryptImageFile(file)
+        router.navigateToGallery()
+    }
 
 }
 

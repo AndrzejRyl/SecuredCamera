@@ -74,6 +74,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         cameraEngine
             .takePicture()
             .saveToFile(file)
-            .whenAvailable { viewModel.onPictureTaken(router) }
+            .whenAvailable { viewModel.onPictureTaken(file, router) }
     }
 }

@@ -6,15 +6,26 @@ import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
 
 class CipherProvider {
 
-    fun provideInitializedCipher(): Cipher =
+    private val secretKey = getOrCreateSecretKey()
+
+    fun provideInitializedEncryptCipher(): Cipher =
         Cipher.getInstance(CIPHER_TRANSFORMATION).apply {
-            val secretKey = getOrCreateSecretKey()
             init(
-                Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE,
+                Cipher.ENCRYPT_MODE,
                 secretKey
+            )
+        }
+
+    fun provideInitializedDecryptCipher(iv: ByteArray): Cipher =
+        Cipher.getInstance(CIPHER_TRANSFORMATION).apply {
+            init(
+                Cipher.DECRYPT_MODE,
+                secretKey,
+                GCMParameterSpec(128, iv)
             )
         }
 
@@ -31,7 +42,7 @@ class CipherProvider {
                 setBlockModes(CIPHER_BLOCK_MODE)
                 setEncryptionPaddings(CIPHER_PADDING)
                 setKeySize(CIPHER_KEY_SIZE)
-                setUserAuthenticationRequired(true)
+                setUserAuthenticationRequired(false)
             }.build()
 
             KeyGenerator.getInstance(
@@ -53,7 +64,7 @@ class CipherProvider {
         private const val CIPHER_TRANSFORMATION =
             "$CIPHER_ALGORITHM/$CIPHER_BLOCK_MODE/$CIPHER_PADDING"
 
-        private const val KEY_NAME = "SECURED_CAMERA"
+        private const val KEY_NAME = "SECURED_CAMERA_KEEY"
         private const val ANDROID_KEYSTORE_NAME = "AndroidKeyStore"
     }
 }

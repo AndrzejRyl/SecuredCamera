@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ryl.securedcamera.R
 import com.ryl.securedcamera.presentation.gallery.adapter.GalleryAdapter
 import kotlinx.android.synthetic.main.fragment_gallery.*
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GalleryFragment : Fragment(R.layout.fragment_gallery) {
@@ -15,7 +16,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
     private val viewModel by viewModel<GalleryViewModel>()
 
     private val galleryAdapter by lazy {
-        GalleryAdapter(layoutInflater)
+        GalleryAdapter(layoutInflater, imageEncryptor = get())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
