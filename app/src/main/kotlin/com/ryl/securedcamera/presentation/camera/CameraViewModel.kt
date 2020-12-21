@@ -31,6 +31,9 @@ class CameraViewModel(
     private val _effects = SingleLiveEvent<CameraScreenEffect>()
     val effects = _effects
 
+    private val _encryptionProgress = MutableLiveData<Int>(INITIAL_PROGRESS)
+    val encryptionProgress = _encryptionProgress.distinctUntilChanged()
+
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->
         _errors.value = throwable.message
     }
@@ -61,10 +64,18 @@ class CameraViewModel(
     private suspend fun generatePictureFile(): File = imagesRepository.generateNewImageFile()
 
     fun onPictureTaken(file: File, router: CameraScreenRouter) {
-        imageEncryptor.encryptImageFile(file)
-        router.navigateToGallery()
+        viewModelScope.launch(dispatcherProvider.main + errorHandler) {
+            imageEncryptor.encryptImageFile(file) {
+                _encryptionProgress.value = it
+            }
+            router.navigateToGallery()
+        }
     }
 
+    companion object {
+        const val INITIAL_PROGRESS = 0
+        const val FULL_PROGRESS = 100
+    }
 }
 
 enum class LensPosition(val selector: LensPositionSelector) {

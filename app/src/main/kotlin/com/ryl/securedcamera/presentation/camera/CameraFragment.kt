@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.ryl.securedcamera.R
+import com.ryl.securedcamera.presentation.camera.CameraViewModel.Companion.FULL_PROGRESS
+import com.ryl.securedcamera.presentation.camera.CameraViewModel.Companion.INITIAL_PROGRESS
 import com.ryl.securedcamera.presentation.camera.model.CameraScreenEffect
 import com.ryl.securedcamera.presentation.camera.router.CameraScreenRouter
 import com.ryl.securedcamera.presentation.camera.router.CameraScreenRouterImpl
@@ -65,6 +67,14 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
             effects.observe(viewLifecycleOwner) {
                 when (it) {
                     is CameraScreenEffect.TakePicture -> takePicture(it.file)
+                }
+            }
+            encryptionProgress.observe(viewLifecycleOwner) {
+                if (it in (INITIAL_PROGRESS + 1) until FULL_PROGRESS) {
+                    cameraScreenEncryptionInProgressView.visibility = View.VISIBLE
+                    cameraScreenProgressBar.progress = it
+                } else {
+                    cameraScreenEncryptionInProgressView.visibility = View.GONE
                 }
             }
         }
