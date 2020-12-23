@@ -12,6 +12,9 @@ import com.ryl.securedcamera.presentation.camera.CameraViewModel.Companion.INITI
 import com.ryl.securedcamera.presentation.camera.model.CameraScreenEffect
 import com.ryl.securedcamera.presentation.camera.router.CameraScreenRouter
 import com.ryl.securedcamera.presentation.camera.router.CameraScreenRouterImpl
+import com.ryl.securedcamera.presentation.main.MainActivity
+import com.ryl.securedcamera.utils.hide
+import com.ryl.securedcamera.utils.show
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.selector.back
@@ -71,10 +74,12 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
             }
             encryptionProgress.observe(viewLifecycleOwner) {
                 if (it in (INITIAL_PROGRESS + 1) until FULL_PROGRESS) {
-                    cameraScreenEncryptionInProgressView.visibility = View.VISIBLE
+                    cameraScreenEncryptionInProgressView.show()
                     cameraScreenProgressBar.progress = it
+                    (requireActivity() as MainActivity).hideBottomBar()
                 } else {
-                    cameraScreenEncryptionInProgressView.visibility = View.GONE
+                    cameraScreenEncryptionInProgressView.hide()
+                    (requireActivity() as MainActivity).showBottomBar()
                 }
             }
         }

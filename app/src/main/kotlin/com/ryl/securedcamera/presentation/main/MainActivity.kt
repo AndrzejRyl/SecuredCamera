@@ -9,6 +9,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ryl.securedcamera.R
+import com.ryl.securedcamera.utils.hide
+import com.ryl.securedcamera.utils.show
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.*
 
@@ -60,5 +62,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     @OnNeverAskAgain(Manifest.permission.CAMERA)
     fun onCameraNeverAskAgain() = showToast(R.string.camera_permission_denied).also { finish() }
+
+    fun hideBottomBar() {
+        mainScreenBottomNavigationView.hide()
+    }
+
+    fun showBottomBar() {
+        mainScreenBottomNavigationView.show()
+    }
 
 }
