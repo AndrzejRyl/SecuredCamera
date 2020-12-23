@@ -33,6 +33,9 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         galleryScreenGalleryRecyclerView.adapter = galleryAdapter
         galleryScreenGalleryRecyclerView.layoutManager =
             StaggeredGridLayoutManager(COLUMNS_COUNT, StaggeredGridLayoutManager.VERTICAL)
+        galleryScreenGalleryRecyclerView.post {
+            galleryAdapter.desiredWidth = galleryScreenGalleryRecyclerView.width / 2
+        }
     }
 
     private fun setupObservers() {

@@ -10,11 +10,14 @@ import com.ryl.securedcamera.utils.hide
 import com.ryl.securedcamera.utils.show
 import kotlinx.android.synthetic.main.item_gallery.view.*
 import java.io.File
+import kotlin.math.roundToInt
 
 class GalleryAdapter(
     private val layoutInflater: LayoutInflater,
     private val loadImage: (File, (Bitmap?) -> Unit) -> Unit
 ) : ListAdapter<GalleryItem, GalleryAdapter.GalleryViewHolder>(ItemDiffer(GalleryItem::image)) {
+
+    var desiredWidth: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder =
         GalleryViewHolder(parent)
@@ -31,11 +34,21 @@ class GalleryAdapter(
             with(itemView) {
                 galleryItemProgressBar.show()
                 loadImage(item.image) { bitmap ->
-                    bitmap?.let { galleryItemImageView.setImageBitmap(it) }
+                    bitmap?.let { galleryItemImageView.setImageBitmap(createScaledBitmap(it)) }
                     galleryItemProgressBar.hide()
                 }
             }
         }
+    }
+
+    private fun createScaledBitmap(bitmap: Bitmap): Bitmap {
+        val width = desiredWidth
+        val height = (bitmap.height * (desiredWidth * 1.0 / bitmap.width)).roundToInt()
+
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
+
+        bitmap.recycle()
+        return scaledBitmap
     }
 }
 
