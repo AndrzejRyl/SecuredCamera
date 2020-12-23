@@ -2,8 +2,9 @@ package com.ryl.securedcamera.data.crypto
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.io.*
 import javax.crypto.Cipher
@@ -14,7 +15,7 @@ interface ImageEncryptor {
     var encryptCipher: Cipher?
 
     suspend fun encryptImageFile(file: File, progressCallback: (Int) -> Unit)
-    fun decryptImageFile(file: File): Bitmap?
+    suspend fun decryptImageFile(file: File, onBitmapReady: (Bitmap?) -> Unit)
 }
 
 class ImageEncryptorImpl(
@@ -69,22 +70,24 @@ class ImageEncryptorImpl(
 
     private fun moveTempFileToDestination(file: File) = getTempFile(file).renameTo(file)
 
-    override fun decryptImageFile(file: File): Bitmap? {
-        return try {
-            encryptCipher?.let {
-                // Retrieve IV
-                val iv = ByteArray(12)
-                val fileInputStream = file.inputStream()
-                fileInputStream.read(iv)
+    override suspend fun decryptImageFile(file: File, onBitmapReady: (Bitmap?) -> Unit) {
+        withContext(Dispatchers.IO) {
+            try {
+                encryptCipher?.let {
+                    // Retrieve IV
+                    val iv = ByteArray(12)
+                    val fileInputStream = file.inputStream()
+                    fileInputStream.read(iv)
 
-                val decryptCipher = cipherProvider.provideInitializedDecryptCipher(iv)
-                val input: InputStream = CipherInputStream(fileInputStream, decryptCipher)
+                    val decryptCipher = cipherProvider.provideInitializedDecryptCipher(iv)
+                    val input: InputStream = CipherInputStream(fileInputStream, decryptCipher)
 
-                BitmapFactory.decodeStream(input)
+                    val result = GlobalScope.async { BitmapFactory.decodeStream(input) }
+                    withContext(Dispatchers.Main) { onBitmapReady(result.await()) }
+                }
+            } catch (e: IOException) {
+                onBitmapReady(null)
             }
-        } catch (e: IOException) {
-            Log.e("Zonk", e.message + "")
-            null
         }
     }
 

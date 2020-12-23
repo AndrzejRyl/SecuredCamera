@@ -8,7 +8,8 @@ val galleryScreenModule = module {
 
     viewModel {
         GalleryViewModel(
-            imagesRepository = get()
+            imagesRepository = get(),
+            imageEncryptor = get()
         )
     }
 }

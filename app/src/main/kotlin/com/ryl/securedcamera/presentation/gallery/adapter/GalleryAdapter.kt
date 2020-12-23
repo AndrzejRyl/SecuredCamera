@@ -1,17 +1,19 @@
 package com.ryl.securedcamera.presentation.gallery.adapter
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ryl.securedcamera.R
-import com.ryl.securedcamera.data.crypto.ImageEncryptor
+import com.ryl.securedcamera.utils.hide
+import com.ryl.securedcamera.utils.show
 import kotlinx.android.synthetic.main.item_gallery.view.*
 import java.io.File
 
 class GalleryAdapter(
     private val layoutInflater: LayoutInflater,
-    private val imageEncryptor: ImageEncryptor
+    private val loadImage: (File, (Bitmap?) -> Unit) -> Unit
 ) : ListAdapter<GalleryItem, GalleryAdapter.GalleryViewHolder>(ItemDiffer(GalleryItem::image)) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder =
@@ -27,8 +29,11 @@ class GalleryAdapter(
 
         fun bind(item: GalleryItem) {
             with(itemView) {
-                val decryptedBitmap = imageEncryptor.decryptImageFile(item.image)
-                galleryItemImageView.setImageBitmap(decryptedBitmap)
+                galleryItemProgressBar.show()
+                loadImage(item.image) { bitmap ->
+                    bitmap?.let { galleryItemImageView.setImageBitmap(it) }
+                    galleryItemProgressBar.hide()
+                }
             }
         }
     }
