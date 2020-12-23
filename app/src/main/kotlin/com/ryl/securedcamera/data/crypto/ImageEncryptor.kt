@@ -72,21 +72,26 @@ class ImageEncryptorImpl(
 
     override suspend fun decryptImageFile(file: File, onBitmapReady: (Bitmap?) -> Unit) {
         withContext(Dispatchers.IO) {
+            var fileInputStream: FileInputStream? = null
+            var cipherInputStream: InputStream? = null
             try {
                 encryptCipher?.let {
                     // Retrieve IV
                     val iv = ByteArray(12)
-                    val fileInputStream = file.inputStream()
-                    fileInputStream.read(iv)
+                    fileInputStream = file.inputStream()
+                    fileInputStream?.read(iv)
 
                     val decryptCipher = cipherProvider.provideInitializedDecryptCipher(iv)
-                    val input: InputStream = CipherInputStream(fileInputStream, decryptCipher)
+                    cipherInputStream = CipherInputStream(fileInputStream, decryptCipher)
 
-                    val result = GlobalScope.async { BitmapFactory.decodeStream(input) }
+                    val result = GlobalScope.async { BitmapFactory.decodeStream(cipherInputStream) }
                     withContext(Dispatchers.Main) { onBitmapReady(result.await()) }
                 }
             } catch (e: IOException) {
                 onBitmapReady(null)
+            } finally {
+                cipherInputStream?.close()
+                fileInputStream?.close()
             }
         }
     }
