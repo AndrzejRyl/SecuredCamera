@@ -3,8 +3,6 @@ package com.ryl.securedcamera.data.crypto
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.io.*
 import javax.crypto.Cipher
@@ -27,11 +25,13 @@ class ImageEncryptorImpl(
 
     override suspend fun encryptImageFile(file: File, progressCallback: (Int) -> Unit) {
         withContext(Dispatchers.IO) {
+            var input: InputStream? = null
+            var output: OutputStream? = null
             try {
                 withContext(Dispatchers.Main) {
                     progressCallback(INITIAL_PROGRESS)
                 }
-                val input: InputStream = BufferedInputStream(file.inputStream())
+                input = BufferedInputStream(file.inputStream())
                 if (encryptCipher != null) {
                     encryptCipher = cipherProvider.provideInitializedEncryptCipher()
                 }
@@ -39,7 +39,7 @@ class ImageEncryptorImpl(
                 // First prepend IV
                 fileOutputStream.write(encryptCipher?.iv)
 
-                val output = CipherOutputStream(fileOutputStream, encryptCipher)
+                output = CipherOutputStream(fileOutputStream, encryptCipher)
 
                 val data = ByteArray(1024)
                 var total: Long = 0
@@ -53,13 +53,14 @@ class ImageEncryptorImpl(
                 }
 
                 output.flush()
-                output.close()
-                input.close()
 
                 moveTempFileToDestination(file)
 
             } catch (e: IOException) {
                 deleteTempFile(file)
+            } finally {
+                output?.close()
+                input?.close()
             }
         }
     }
