@@ -84,8 +84,8 @@ class ImageEncryptorImpl(
                     val decryptCipher = cipherProvider.provideInitializedDecryptCipher(iv)
                     cipherInputStream = CipherInputStream(fileInputStream, decryptCipher)
 
-                    val result = GlobalScope.async { BitmapFactory.decodeStream(cipherInputStream) }
-                    withContext(Dispatchers.Main) { onBitmapReady(result.await()) }
+                    val result = BitmapFactory.decodeStream(cipherInputStream)
+                    withContext(Dispatchers.Main) { onBitmapReady(result) }
                 }
             } catch (e: IOException) {
                 onBitmapReady(null)
