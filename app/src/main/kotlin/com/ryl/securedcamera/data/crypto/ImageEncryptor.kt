@@ -38,6 +38,7 @@ class ImageEncryptorImpl(
                 val fileOutputStream = FileOutputStream(getTempFile(file))
                 // First prepend IV
                 fileOutputStream.write(encryptCipher?.iv)
+                // TODO: Prepend EXIF info as well so as to rotate images properly on decryption
 
                 output = CipherOutputStream(fileOutputStream, encryptCipher)
 
@@ -77,6 +78,7 @@ class ImageEncryptorImpl(
             var cipherInputStream: InputStream? = null
             try {
                 encryptCipher?.let {
+                    // TODO: Retrieve EXIF info
                     // Retrieve IV
                     val iv = ByteArray(12)
                     fileInputStream = file.inputStream()
