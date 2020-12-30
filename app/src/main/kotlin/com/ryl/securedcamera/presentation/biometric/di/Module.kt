@@ -7,7 +7,8 @@ import org.koin.dsl.module
 val biometricCheckModule = module {
     viewModel {
         BiometricCheckViewModel(
-            imageEncryptor = get()
+            imageEncryptor = get(),
+            androidServicesProvider = get()
         )
     }
 }

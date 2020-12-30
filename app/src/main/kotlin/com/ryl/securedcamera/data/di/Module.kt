@@ -5,6 +5,8 @@ import com.ryl.securedcamera.data.crypto.ImageEncryptor
 import com.ryl.securedcamera.data.crypto.ImageEncryptorImpl
 import com.ryl.securedcamera.data.images.ImagesRepository
 import com.ryl.securedcamera.data.images.ImagesRepositoryImpl
+import com.ryl.securedcamera.utils.androidservices.AndroidServicesProvider
+import com.ryl.securedcamera.utils.androidservices.AndroidServicesProviderImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -25,5 +27,9 @@ val dataModule = module {
             cacheDestination = androidContext().cacheDir,
             cipherProvider = get()
         )
+    }
+
+    single<AndroidServicesProvider> {
+        AndroidServicesProviderImpl(androidContext())
     }
 }
